@@ -6,19 +6,18 @@ from PIL import Image
 
 from functions import crack_detection
 
-#Çatlak tespiti yapmak istenen görselin uzantısının girilmesi
+#Entering the extension of the image for crack detection
 path= r"Aaaaaa.jpg"
 
-#Yönteme başlamadan hemen önceki zaman değeri
+#Time value immediately before starting the method
 start_time = time.time()
 
-#Sırasıyla, çatlak olmayan nesnelerden arındırılmış binary görsel, çatlak alanlarının konumlarının 
-#ve çatlak bölgesi tespit edilmiş görselin elde edilmesi
+#The binary image, respectively, is a binary visualisation of the positions of the cracked areas and obtaining the image with the crack area detected
 image1, cracknodes, image2= crack_detection(path)
 
-#Yöntemin tespit için harcadığı süre
+#Time taken by the method for detection
 passed_time = time.time() - start_time
 
-#Elde edilen görsellerin gösterilmesi
+#Showing the visuals obtained
 cv2.imshow("Image 1",image)
 cv2.imshow("Image 2",image1)
