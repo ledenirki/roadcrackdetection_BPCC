@@ -6,12 +6,12 @@ import pickle
 from math import floor
 import numpy as np
 
-#Manuel olarak belirlenmiş binary çatlak görselinin uzantısı
+#Extension of manually specified binary crack image
 groundtruth_path= r"Aaaaaa.jpg"
-#Başarı testi yapılacak renkli görselin uzantısı
+#Extension of the coloured image for the achievement test
 rgb_image_path= r"Aaaaaa.jpg"
 
-#GYBE ağırlık parametrelerinin içeriye aktarılması 
+#Import of BPCC weight parameters
 ws_file= open(r"nn_W.pkl","rb")
 nn_W = pickle.load(ws_file)
 ws_file.close()
@@ -25,21 +25,21 @@ TP=0    #True-Positive
 FP=0    #False-Positive
 FN=0    #False-Negative
 
-#Başarı tespiti yapılacak görselin gri tonda içeriye aktarılması
+#Transferring the image to be determined success to the inside in gray-scale
 img= cv2.imread(original_paths[i],0)    
 
-#Başarı tespiti yapılacak görselin renkli tonda içeriye aktarılması
+#Transferring the visual to be used for success determination into the interior in rgb image
 img_r= cv2.imread(original_paths[i]) 
 
-#Çatlak tespiti yönteminin uygulanması
+#Using of the crack detection method
 image,cracknodes, image1= crack_detection(img,img_r,nn_W,nn_b)
 
-#Ground truth çatlak görselinin içeriye aktarılması ve binary hale getirilmesi
+#Importing and binarising the ground truth crack image
 real_image= cv2.imread(real_paths[i],0)
 _, real_image=cv2.threshold(real_image, 100, 255,cv2.THRESH_BINARY)
 img_Real=real_image.copy()
 
-#Çatlak görselindeki TP ve FP değerlerinin hesaplanması
+#Calculation of TP and FP values in the crack image
 for i in range(len(cracknodes)):
     area=real_image[cracknodes[i][0]:cracknodes[i][1], cracknodes[i][2]:cracknodes[i][3]]       
     img_Real[cracknodes[i][0]:cracknodes[i][1], cracknodes[i][2]:cracknodes[i][3]]=0       
@@ -48,7 +48,7 @@ for i in range(len(cracknodes)):
     else:
         FP=FP+1
 
-#Çatlak görselindeki FN değerinin hesaplanması
+#Calculation of the FN value in the crack image
 _, contours, _ = cv2.findContours(img_Real, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 for c in contours:
     (x, y, w, h) = cv2.boundingRect(c)
@@ -59,4 +59,4 @@ for c in contours:
 precision= TP/(TP+FP)  
 recall= TP/(TP+FN)
 f1= 2*(precision*recall)/(precision+recall)  
-print("Kesinlik: %"+ precision*100, "Duyarlılık: %"+ recall*100, "F1-Score: %"+ f1*100) 
+print("Precision: %"+ precision*100, "Recall: %"+ recall*100, "F1-Score: %"+ f1*100) 
