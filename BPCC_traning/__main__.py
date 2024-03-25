@@ -7,13 +7,13 @@ from sklearn.model_selection import train_test_split
 from functions import *
 
 
-# 80*80 boyutunda çatlak içeren ve içermeyen görsellerin uzantılarının içeriye aktarılması
+# Importing the extensions of images with and without cracks in 80*80 pixels
 
-crack_paths= glob.glob(r"New_Dataset_80_80\Cracks\AllDatasets\*.png")  #Çatlak içeren veriler
-non_crack_paths= glob.glob(r"New_Dataset_80_80\NonCracks\AllDatasets\*.jpg")   #Çatlak içermeyen veriler
+crack_paths= glob.glob(r"New_Dataset_80_80\Cracks\AllDatasets\*.png")  #Cracked data
+non_crack_paths= glob.glob(r"New_Dataset_80_80\NonCracks\AllDatasets\*.jpg")   #Non-cracked data
 
-# Verilerin içeri aktarılıp thresholdimage fonksiyonun uygulanması ve data olarak tek bir değişkende tutulması 
-# [0,1] =çatlak değil [1,0]=çatlak
+# Importing the data, applying the thresholdimage function and keeping it in a single variable as data
+# [0,1] =Non-cracked [1,0]=Cracked
 
 data= [] 
 for path in crack_paths:  
@@ -28,7 +28,7 @@ for path in non_crack_paths:
     x= img_cm.reshape(img.shape[0]*img.shape[1],)      
     data.append((x))
     
-# Datanın çıktı değerlerini düzenleyerek eğitim ve test olarak ana veri setinin ayrılması
+# Separation of the main data set as training and test by organising the output values of the data
 
 a=np.zeros((len(data),len(data[0])))
 for i in range(len(data)):
@@ -40,7 +40,7 @@ Y=np.append(a,b,axis=0)
 X=data_n
 train_X, test_X, train_y, test_y = train_test_split(X, Y, test_size=0.20, random_state=42)
 
-# Oluştulacak sinir ağının özelliklerinin belirlenmesi 
+# Determination of the properties of the neural network to be formed
 
 train_x = np.double(train_X)
 test_x  = np.double(test_X)
@@ -64,7 +64,7 @@ Threshold = 0.01
 alph = 0.3
 m_ratio = 0.3
 
-# Ağırlık ve bias terimlerinin üretilmesi
+# Generation of weight and bias terms
 
 nn_size                = sizes
 nn_number_layer        = np.size(nn_size) - 1 
@@ -93,7 +93,7 @@ cost_last = 0
 Wgrad= [[[0]],[[0]],[[0]]]
 Delta= [[[0]],[[0]]]
 
-# Elde edilen özellikler değerlerinin kullanılması ile öğrenme işleminin yapılması
+# Performing the learning process by using the obtained feature values
 
 for k in range(0,numepochs):    
     print(k)
